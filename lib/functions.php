@@ -40,7 +40,7 @@ function uservalidationbyadmin_request_validation($user_guid, $admin_requested =
 
 	$site = elgg_get_site_entity();
 	$user_guid = (int)$user_guid;
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, TRUE);
 /*	
 	if (($user) && ($user instanceof ElggUser)) {
 		// Work out validate link
@@ -92,7 +92,7 @@ function uservalidationbyadmin_request_validation($user_guid, $admin_requested =
  * @return bool
  */
 function uservalidationbyadmin_validate_email($user_guid, $code) {
-	$user = get_entity($user_guid);
+	$user = get_entity($user_guid, TRUE);
 
 	if ($code == uservalidationbyadmin_generate_code($user_guid, $user->email)) {
 		return elgg_set_user_validation_status($user_guid, true, 'email');

@@ -20,6 +20,7 @@ $options = array(
 	'limit' => $limit,
 	'offset' => $offset,
 	'count' => TRUE,
+	'from_login' => TRUE,
 );
 $count = elgg_get_entities($options);
 
@@ -96,7 +97,8 @@ if (is_array($users) && count($users) > 0) {
 
 echo <<<___END
 <div class="elgg-module elgg-module-inline uservalidation-module">
-	<div class="elgg-head">
+<div>Bin da</div>
+   <div class="elgg-head">
 		$bulk_actions
 	</div>
 	<div class="elgg-body">

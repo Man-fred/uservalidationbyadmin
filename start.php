@@ -145,8 +145,9 @@ function uservalidationbyadmin_check_auth_attempt($credentials) {
 	$access_status = access_get_show_hidden_status();
 	access_show_hidden_entities(TRUE);
 
-	$user = get_user_by_username($username);
-	if ($user && isset($user->validated) && !$user->validated) {
+	$user = get_user_by_username($username, TRUE);
+	if ($user && elgg_get_user_validation_status($user->guid) == FALSE) {
+        //return true;
 		// show an error and resend validation email
 		uservalidationbyadmin_request_validation($user->guid);
 		access_show_hidden_entities($access_status);
@@ -205,7 +206,7 @@ function uservalidationbyadmin_page_handler($page) {
  * @param ElggUser $user
  */
 function uservalidationbyadmin_validate_new_admin_user($event, $type, $user) {
-	if ($user instanceof ElggUser && !$user->validated) {
+	if ($user instanceof ElggUser && !elgg_get_user_validation_status($user->guid)) {
 		elgg_set_user_validation_status($user->guid, TRUE, 'admin_user');
 	}
 }
@@ -231,7 +232,7 @@ function uservalidationbyadmin_check_manual_login($event, $type, $user) {
 	access_show_hidden_entities(TRUE);
 
 	// @todo register_error()?
-	$return = ($user instanceof ElggUser && !$user->isEnabled() && !$user->validated) ? FALSE : NULL;
+	$return = ($user instanceof ElggUser && $user->isEnabled() && elgg_get_user_validation_status($user->guid)) ? True : FALSE;
 
 	access_show_hidden_entities($access_status);
 
