@@ -7,6 +7,7 @@
  */
 
 $user = elgg_extract('user', $vars);
+$metadata = elgg_extract('metadata', $vars);
 
 $checkbox = elgg_view('input/checkbox', array(
 	'name' => 'user_guids[]',
@@ -38,6 +39,7 @@ $block = <<<___END
 	<label>$user->username: "$user->name" &lt;$user->email&gt;</label>
 	<div class="uservalidationbyadmin-unvalidated-user-details">
 		$created
+		$metadata
 	</div>
 ___END;
 

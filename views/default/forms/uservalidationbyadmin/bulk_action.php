@@ -36,8 +36,6 @@ $options['count']  = FALSE;
 
 $users = elgg_get_entities($options);
 
-access_show_hidden_entities($hidden_entities);
-elgg_set_ignore_access($ia);
 
 // setup pagination
 $pagination = elgg_view('navigation/pagination',array(
@@ -86,18 +84,25 @@ $bulk_actions = <<<___END
 ___END;
 
 if (is_array($users) && count($users) > 0) {
-	$html = '<ul class="elgg-list elgg-list-distinct">';
+    $html = '<ul class="elgg-list elgg-list-distinct">';
 	foreach ($users as $user) {
 		$html .= "<li id=\"unvalidated-user-{$user->guid}\" class=\"elgg-item uservalidationbyadmin-unvalidated-user-item\">";
-		$html .= elgg_view('uservalidationbyadmin/unvalidated_user', array('user' => $user));
-		$html .= '</li>';
+		$profiles = elgg_get_metadata(array('metadata_owner_guids' => $user->guid));
+		$metadata = '<div>';
+		if ($profiles) {
+			foreach ($profiles as $profile) {
+				$metadata .= elgg_echo($profile['name']).': '.$profile['value'].'<br />';
+			}
+		}
+		$metadata .= '</div>';
+		$html .= elgg_view('uservalidationbyadmin/unvalidated_user', array('user' => $user, 'metadata' => $metadata));
+        $html .= '</li>';
 	}
 	$html .= '</ul>';
 }
 
 echo <<<___END
 <div class="elgg-module elgg-module-inline uservalidation-module">
-<div>Bin da</div>
    <div class="elgg-head">
 		$bulk_actions
 	</div>
@@ -112,3 +117,5 @@ if ($count > 5) {
 }
 
 echo $pagination;
+access_show_hidden_entities($hidden_entities);
+elgg_set_ignore_access($ia);
